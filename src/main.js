@@ -1,5 +1,6 @@
 import './styles.css';
 import { renderCharacterCards, renderCharacters } from './ui/renderCharacters.js';
+import { filterCharacters, sortCharacters } from './utils/filters.js';
 
 const app = document.querySelector('#app');
 
@@ -202,26 +203,6 @@ const updateStatusMessage = message => {
   }
 };
 
-const sortCharacters = (characters, sortValue) => {
-  const charactersCopy = [...characters];
-
-  if (sortValue === 'name-desc') {
-    return charactersCopy.sort((firstCharacter, secondCharacter) => {
-      return secondCharacter.name.localeCompare(firstCharacter.name);
-    });
-  }
-
-  if (sortValue === 'episodes-desc') {
-    return charactersCopy.sort((firstCharacter, secondCharacter) => {
-      return secondCharacter.episodes.length - firstCharacter.episodes.length;
-    });
-  }
-
-  return charactersCopy.sort((firstCharacter, secondCharacter) => {
-    return firstCharacter.name.localeCompare(secondCharacter.name);
-  });
-};
-
 const updateTable = () => {
   if (currentView === 'grid') {
     renderCharacterCards(resultsContainer, visibleCharacters);
@@ -232,30 +213,15 @@ const updateTable = () => {
 };
 
 const applyFilters = () => {
-  const searchValue = searchInput ? searchInput.value.trim().toLowerCase() : '';
-  const selectedStatus = statusFilter ? statusFilter.value : 'all';
-  const selectedSpecies = speciesFilter ? speciesFilter.value : 'all';
-  const selectedGender = genderFilter ? genderFilter.value : 'all';
+  const activeFilters = {
+    search: searchInput ? searchInput.value : '',
+    status: statusFilter ? statusFilter.value : 'all',
+    species: speciesFilter ? speciesFilter.value : 'all',
+    gender: genderFilter ? genderFilter.value : 'all'
+  };
   const selectedSort = sortSelect ? sortSelect.value : 'name-asc';
 
-  visibleCharacters = mockCharacters.filter(character => {
-    const matchesSearch =
-      character.name.toLowerCase().includes(searchValue) ||
-      character.origin.toLowerCase().includes(searchValue) ||
-      character.location.toLowerCase().includes(searchValue);
-
-    const matchesStatus =
-      selectedStatus === 'all' ? true : character.status === selectedStatus;
-
-    const matchesSpecies =
-      selectedSpecies === 'all' ? true : character.species === selectedSpecies;
-
-    const matchesGender =
-      selectedGender === 'all' ? true : character.gender === selectedGender;
-
-    return matchesSearch && matchesStatus && matchesSpecies && matchesGender;
-  });
-
+  visibleCharacters = filterCharacters(mockCharacters, activeFilters);
   visibleCharacters = sortCharacters(visibleCharacters, selectedSort);
   updateTable();
   updateStatusMessage(`${visibleCharacters.length} result(a)t(en) zichtbaar.`);
