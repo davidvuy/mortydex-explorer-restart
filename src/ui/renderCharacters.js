@@ -23,8 +23,8 @@ export const renderCharacters = (container, characters) => {
         <td>${formatValue(character.status)}</td>
         <td>${formatValue(character.species)}</td>
         <td>${formatValue(character.gender)}</td>
-        <td>${formatValue(character.origin)}</td>
-        <td>${formatValue(character.location)}</td>
+        <td>${formatValue(character.originName)}</td>
+        <td>${formatValue(character.locationName)}</td>
         <td>${formatEpisodeCount(character.episodes)}</td>
       </tr>
     `;
@@ -71,23 +71,27 @@ export const renderCharacterCards = (container, characters) => {
       return `
         <article class="character-card">
           <h3>${formatValue(character.name)}</h3>
-          <p>${formatValue(character.status)} - ${formatValue(character.species)}</p>
+          <p>${formatValue(character.shortInfo)}</p>
           <dl>
             <div>
               <dt>Gender</dt>
               <dd>${formatValue(character.gender)}</dd>
             </div>
             <div>
+              <dt>Type</dt>
+              <dd>${formatValue(character.type)}</dd>
+            </div>
+            <div>
               <dt>Origin</dt>
-              <dd>${formatValue(character.origin)}</dd>
+              <dd>${formatValue(character.originName)}</dd>
             </div>
             <div>
               <dt>Location</dt>
-              <dd>${formatValue(character.location)}</dd>
+              <dd>${formatValue(character.locationName)}</dd>
             </div>
             <div>
               <dt>Episodes</dt>
-              <dd>${formatEpisodeCount(character.episodes)}</dd>
+              <dd>${character.episodeCount} episode(s)</dd>
             </div>
           </dl>
         </article>

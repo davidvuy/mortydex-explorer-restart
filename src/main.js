@@ -1,4 +1,5 @@
 import './styles.css';
+import { Character } from './models/Character.js';
 import { bindControlEvents, bindViewButtons } from './ui/events.js';
 import { renderCharacterCards, renderCharacters } from './ui/renderCharacters.js';
 import { filterCharacters, sortCharacters } from './utils/filters.js';
@@ -11,62 +12,105 @@ if (!app) {
 
 const mockCharacters = [
   {
+    id: 1,
     name: 'Rick Sanchez',
     status: 'Alive',
     species: 'Human',
+    type: '',
     gender: 'Male',
-    origin: 'Earth (C-137)',
-    location: 'Citadel of Ricks',
-    episodes: ['S01E01', 'S01E02', 'S01E03', 'S02E10']
+    origin: {
+      name: 'Earth (C-137)'
+    },
+    location: {
+      name: 'Citadel of Ricks'
+    },
+    episodes: ['S01E01', 'S01E02', 'S01E03', 'S02E10'],
+    created: '2017-11-04'
   },
   {
+    id: 2,
     name: 'Morty Smith',
     status: 'Alive',
     species: 'Human',
+    type: '',
     gender: 'Male',
-    origin: 'unknown',
-    location: 'Earth (Replacement Dimension)',
-    episodes: ['S01E01', 'S01E04', 'S03E01']
+    origin: {
+      name: 'unknown'
+    },
+    location: {
+      name: 'Earth (Replacement Dimension)'
+    },
+    episodes: ['S01E01', 'S01E04', 'S03E01'],
+    created: '2017-11-04'
   },
   {
+    id: 3,
     name: 'Summer Smith',
     status: 'Alive',
     species: 'Human',
+    type: '',
     gender: 'Female',
-    origin: 'Earth (Replacement Dimension)',
-    location: 'Earth (Replacement Dimension)',
-    episodes: ['S01E06', 'S02E06', 'S03E05']
+    origin: {
+      name: 'Earth (Replacement Dimension)'
+    },
+    location: {
+      name: 'Earth (Replacement Dimension)'
+    },
+    episodes: ['S01E06', 'S02E06', 'S03E05'],
+    created: '2017-11-04'
   },
   {
+    id: 47,
     name: 'Birdperson',
     status: 'Dead',
     species: 'Alien',
+    type: '',
     gender: 'Male',
-    origin: 'Bird World',
-    location: 'Planet Squanch',
-    episodes: ['S01E05', 'S02E10']
+    origin: {
+      name: 'Bird World'
+    },
+    location: {
+      name: 'Planet Squanch'
+    },
+    episodes: ['S01E05', 'S02E10'],
+    created: '2017-11-05'
   },
   {
+    id: 242,
     name: 'Mr. Meeseeks',
     status: 'unknown',
     species: 'Meeseeks',
+    type: '',
     gender: 'Male',
-    origin: '   ',
-    location: 'Interdimensional Cable',
-    episodes: ['S01E05']
+    origin: {
+      name: '   '
+    },
+    location: {
+      name: 'Interdimensional Cable'
+    },
+    episodes: ['S01E05'],
+    created: '2017-11-05'
   },
   {
+    id: 7,
     name: 'Abradolf Lincler',
     status: 'unknown',
     species: 'Human',
+    type: 'Genetic experiment',
     gender: 'Male',
-    origin: 'Earth (Replacement Dimension)',
-    location: '',
-    episodes: ['S01E10', 'S02E07']
+    origin: {
+      name: 'Earth (Replacement Dimension)'
+    },
+    location: {
+      name: ''
+    },
+    episodes: ['S01E10', 'S02E07'],
+    created: '2017-11-04'
   }
 ];
 
-let visibleCharacters = [...mockCharacters];
+const characters = Character.fromList(mockCharacters);
+let visibleCharacters = [...characters];
 let currentView = 'table';
 
 app.innerHTML = `
@@ -229,7 +273,7 @@ const applyFilters = () => {
   };
   const selectedSort = sortSelect ? sortSelect.value : 'name-asc';
 
-  visibleCharacters = filterCharacters(mockCharacters, activeFilters);
+  visibleCharacters = filterCharacters(characters, activeFilters);
   visibleCharacters = sortCharacters(visibleCharacters, selectedSort);
   updateTable();
   updateStatusMessage(`${visibleCharacters.length} result(a)t(en) zichtbaar.`);

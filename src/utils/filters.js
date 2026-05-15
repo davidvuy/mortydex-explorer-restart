@@ -9,8 +9,9 @@ const matchesSearchValue = (character, searchValue = '') => {
 
   const searchableText = [
     character.name,
-    character.origin,
-    character.location
+    character.originName,
+    character.locationName,
+    character.type
   ]
     .map(value => normalizeText(value))
     .join(' ');
@@ -51,7 +52,7 @@ export const sortCharacters = (characters = [], sortValue = 'name-asc') => {
 
   if (sortValue === 'episodes-desc') {
     return charactersCopy.sort((firstCharacter, secondCharacter) => {
-      return secondCharacter.episodes.length - firstCharacter.episodes.length;
+      return secondCharacter.episodeCount - firstCharacter.episodeCount;
     });
   }
 
