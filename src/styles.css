@@ -160,7 +160,7 @@ select {
 
 .characters-table {
   width: 100%;
-  min-width: 760px;
+  min-width: 680px;
   border-collapse: collapse;
 }
 
@@ -181,6 +181,52 @@ select {
 
 .characters-table tbody tr:hover {
   background: rgba(223, 238, 255, 0.45);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.character-card {
+  border: 1px solid rgba(22, 50, 79, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 1rem;
+}
+
+.character-card h3 {
+  margin: 0;
+}
+
+.character-card p {
+  margin: 0.35rem 0 0.9rem;
+  color: var(--soft-text);
+}
+
+.character-card dl {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.character-card div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.character-card dt {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.character-card dd {
+  margin: 0;
+  color: #16324f;
 }
 
 .side-by-side {
@@ -204,7 +250,8 @@ select {
 
 @media (max-width: 960px) {
   .layout,
-  .side-by-side {
+  .side-by-side,
+  .cards-grid {
     grid-template-columns: 1fr;
   }
 

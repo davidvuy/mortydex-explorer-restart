@@ -51,3 +51,53 @@ export const renderCharacters = (container, characters) => {
     </div>
   `;
 };
+
+export const renderCharacterCards = (container, characters) => {
+  if (!container) {
+    return;
+  }
+
+  if (characters.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        Geen resultaten gevonden. Probeer iets anders.
+      </div>
+    `;
+    return;
+  }
+
+  const cards = characters
+    .map(character => {
+      return `
+        <article class="character-card">
+          <h3>${formatValue(character.name)}</h3>
+          <p>${formatValue(character.status)} - ${formatValue(character.species)}</p>
+          <dl>
+            <div>
+              <dt>Gender</dt>
+              <dd>${formatValue(character.gender)}</dd>
+            </div>
+            <div>
+              <dt>Origin</dt>
+              <dd>${formatValue(character.origin)}</dd>
+            </div>
+            <div>
+              <dt>Location</dt>
+              <dd>${formatValue(character.location)}</dd>
+            </div>
+            <div>
+              <dt>Episodes</dt>
+              <dd>${formatEpisodeCount(character.episodes)}</dd>
+            </div>
+          </dl>
+        </article>
+      `;
+    })
+    .join('');
+
+  container.innerHTML = `
+    <div class="cards-grid">
+      ${cards}
+    </div>
+  `;
+};

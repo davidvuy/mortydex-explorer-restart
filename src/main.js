@@ -1,5 +1,5 @@
 import './styles.css';
-import { renderCharacters } from './ui/renderCharacters.js';
+import { renderCharacterCards, renderCharacters } from './ui/renderCharacters.js';
 
 const app = document.querySelector('#app');
 
@@ -65,6 +65,7 @@ const mockCharacters = [
 ];
 
 let visibleCharacters = [...mockCharacters];
+let currentView = 'table';
 
 app.innerHTML = `
   <div class="page-shell">
@@ -222,11 +223,16 @@ const sortCharacters = (characters, sortValue) => {
 };
 
 const updateTable = () => {
+  if (currentView === 'grid') {
+    renderCharacterCards(resultsContainer, visibleCharacters);
+    return;
+  }
+
   renderCharacters(resultsContainer, visibleCharacters);
 };
 
 const applyFilters = () => {
-  const searchValue = searchInput ? searchInput.value.trim() : '';
+  const searchValue = searchInput ? searchInput.value.trim().toLowerCase() : '';
   const selectedStatus = statusFilter ? statusFilter.value : 'all';
   const selectedSpecies = speciesFilter ? speciesFilter.value : 'all';
   const selectedGender = genderFilter ? genderFilter.value : 'all';
@@ -234,9 +240,9 @@ const applyFilters = () => {
 
   visibleCharacters = mockCharacters.filter(character => {
     const matchesSearch =
-      character.name.includes(searchValue) ||
-      character.origin.includes(searchValue) ||
-      character.location.includes(searchValue);
+      character.name.toLowerCase().includes(searchValue) ||
+      character.origin.toLowerCase().includes(searchValue) ||
+      character.location.toLowerCase().includes(searchValue);
 
     const matchesStatus =
       selectedStatus === 'all' ? true : character.status === selectedStatus;
@@ -294,7 +300,9 @@ if (viewButtons.length > 0) {
         currentButton.classList.remove('is-active');
       });
 
+      currentView = button.dataset.view;
       button.classList.add('is-active');
+      updateTable();
       updateStatusMessage(`Weergave veranderd naar ${button.dataset.view}.`);
     });
   });

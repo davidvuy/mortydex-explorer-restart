@@ -1,5 +1,5 @@
 export const formatValue = value => {
-  if (value === null || value === undefined || value === '') {
+  if (value === null || value === undefined || String(value).trim() === '') {
     return 'Onbekend';
   }
 
