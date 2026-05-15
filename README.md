@@ -16,6 +16,7 @@ Het idee is gewoon om Rick and Morty characters op te halen en die op een leuke,
 - zoekveld
 - filters
 - sortering
+- knop om filters terug te wissen
 - view knoppen
 - mock-data van 6 characters
 - tabel met naam, status, species, gender, origin, location en episodes

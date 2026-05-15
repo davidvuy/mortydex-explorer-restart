@@ -1,4 +1,5 @@
 import './styles.css';
+import { bindControlEvents, bindViewButtons } from './ui/events.js';
 import { renderCharacterCards, renderCharacters } from './ui/renderCharacters.js';
 import { filterCharacters, sortCharacters } from './utils/filters.js';
 
@@ -133,10 +134,16 @@ app.innerHTML = `
             <select id="sortSelect" name="sort">
               <option value="name-asc">Naam A-Z</option>
               <option value="name-desc">Naam Z-A</option>
+              <option value="status-asc">Status</option>
+              <option value="species-asc">Species</option>
               <option value="episodes-desc">Meeste episodes</option>
             </select>
           </label>
         </form>
+
+        <button class="reset-button" id="resetButton" type="button">
+          filters wissen
+        </button>
 
         <div class="view-toggle" aria-label="Kies een weergave">
           <button class="toggle-button is-active" type="button" data-view="table">
@@ -193,6 +200,7 @@ const statusFilter = document.querySelector('#statusFilter');
 const speciesFilter = document.querySelector('#speciesFilter');
 const genderFilter = document.querySelector('#genderFilter');
 const sortSelect = document.querySelector('#sortSelect');
+const resetButton = document.querySelector('#resetButton');
 const resultsContainer = document.querySelector('#resultsContainer');
 const statusMessage = document.querySelector('#statusMessage');
 const viewButtons = document.querySelectorAll('[data-view]');
@@ -229,50 +237,23 @@ const applyFilters = () => {
 
 updateTable();
 
-if (searchInput) {
-  searchInput.addEventListener('input', () => {
-    applyFilters();
-  });
-}
+bindControlEvents(
+  {
+    searchInput,
+    statusFilter,
+    speciesFilter,
+    genderFilter,
+    sortSelect,
+    resetButton
+  },
+  applyFilters
+);
 
-if (statusFilter) {
-  statusFilter.addEventListener('change', () => {
-    applyFilters();
-  });
-}
-
-if (speciesFilter) {
-  speciesFilter.addEventListener('change', () => {
-    applyFilters();
-  });
-}
-
-if (genderFilter) {
-  genderFilter.addEventListener('change', () => {
-    applyFilters();
-  });
-}
-
-if (sortSelect) {
-  sortSelect.addEventListener('change', () => {
-    applyFilters();
-  });
-}
-
-if (viewButtons.length > 0) {
-  viewButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      viewButtons.forEach(currentButton => {
-        currentButton.classList.remove('is-active');
-      });
-
-      currentView = button.dataset.view;
-      button.classList.add('is-active');
-      updateTable();
-      updateStatusMessage(`Weergave veranderd naar ${button.dataset.view}.`);
-    });
-  });
-}
+bindViewButtons(viewButtons, view => {
+  currentView = view;
+  updateTable();
+  updateStatusMessage(`Weergave veranderd naar ${view}.`);
+});
 
 window.addEventListener('load', () => {
   console.log('MortyDex Explorer is geladen.');

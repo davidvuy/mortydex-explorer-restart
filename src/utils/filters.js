@@ -55,6 +55,18 @@ export const sortCharacters = (characters = [], sortValue = 'name-asc') => {
     });
   }
 
+  if (sortValue === 'status-asc') {
+    return charactersCopy.sort((firstCharacter, secondCharacter) => {
+      return firstCharacter.status.localeCompare(secondCharacter.status);
+    });
+  }
+
+  if (sortValue === 'species-asc') {
+    return charactersCopy.sort((firstCharacter, secondCharacter) => {
+      return firstCharacter.species.localeCompare(secondCharacter.species);
+    });
+  }
+
   return charactersCopy.sort((firstCharacter, secondCharacter) => {
     return firstCharacter.name.localeCompare(secondCharacter.name);
   });
