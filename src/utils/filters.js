@@ -1,3 +1,5 @@
+import { Character } from '../models/Character.js';
+
 const normalizeText = (value = '') => String(value).trim().toLowerCase();
 
 const matchesSearchValue = (character, searchValue = '') => {
@@ -11,7 +13,7 @@ const matchesSearchValue = (character, searchValue = '') => {
     character.name,
     character.originName,
     character.locationName,
-    character.type
+    character.typeText
   ]
     .map(value => normalizeText(value))
     .join(' ');
@@ -33,8 +35,8 @@ export const filterCharacters = (characters = [], filters = {}) => {
 
   return characters.filter(character => {
     const matchesSearch = matchesSearchValue(character, search);
-    const matchesStatus = matchesSelectedValue(character.status, status);
-    const matchesSpecies = matchesSelectedValue(character.species, species);
+    const matchesStatus = matchesSelectedValue(character.statusText, status);
+    const matchesSpecies = matchesSelectedValue(character.speciesText, species);
     const matchesGender = matchesSelectedValue(character.gender, gender);
 
     return matchesSearch && matchesStatus && matchesSpecies && matchesGender;
@@ -46,7 +48,7 @@ export const sortCharacters = (characters = [], sortValue = 'name-asc') => {
 
   if (sortValue === 'name-desc') {
     return charactersCopy.sort((firstCharacter, secondCharacter) => {
-      return secondCharacter.name.localeCompare(firstCharacter.name);
+      return Character.compareByName(secondCharacter, firstCharacter);
     });
   }
 
@@ -58,17 +60,15 @@ export const sortCharacters = (characters = [], sortValue = 'name-asc') => {
 
   if (sortValue === 'status-asc') {
     return charactersCopy.sort((firstCharacter, secondCharacter) => {
-      return firstCharacter.status.localeCompare(secondCharacter.status);
+      return firstCharacter.statusText.localeCompare(secondCharacter.statusText);
     });
   }
 
   if (sortValue === 'species-asc') {
     return charactersCopy.sort((firstCharacter, secondCharacter) => {
-      return firstCharacter.species.localeCompare(secondCharacter.species);
+      return firstCharacter.speciesText.localeCompare(secondCharacter.speciesText);
     });
   }
 
-  return charactersCopy.sort((firstCharacter, secondCharacter) => {
-    return firstCharacter.name.localeCompare(secondCharacter.name);
-  });
+  return charactersCopy.sort(Character.compareByName);
 };

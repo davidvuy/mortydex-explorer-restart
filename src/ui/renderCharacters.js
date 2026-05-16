@@ -1,4 +1,4 @@
-import { formatEpisodeCount, formatValue } from '../utils/formatters.js';
+import { formatValue } from '../utils/formatters.js';
 
 export const renderCharacters = (container, characters) => {
   if (!container) {
@@ -20,12 +20,12 @@ export const renderCharacters = (container, characters) => {
     rows += `
       <tr>
         <td>${formatValue(character.name)}</td>
-        <td>${formatValue(character.status)}</td>
-        <td>${formatValue(character.species)}</td>
+        <td>${formatValue(character.statusText)}</td>
+        <td>${formatValue(character.speciesText)}</td>
         <td>${formatValue(character.gender)}</td>
         <td>${formatValue(character.originName)}</td>
         <td>${formatValue(character.locationName)}</td>
-        <td>${formatEpisodeCount(character.episodes)}</td>
+        <td>${character.episodeCount} episode(s)</td>
       </tr>
     `;
   }
@@ -79,7 +79,7 @@ export const renderCharacterCards = (container, characters) => {
             </div>
             <div>
               <dt>Type</dt>
-              <dd>${formatValue(character.type)}</dd>
+              <dd>${formatValue(character.typeText)}</dd>
             </div>
             <div>
               <dt>Origin</dt>
@@ -92,6 +92,10 @@ export const renderCharacterCards = (container, characters) => {
             <div>
               <dt>Episodes</dt>
               <dd>${character.episodeCount} episode(s)</dd>
+            </div>
+            <div>
+              <dt>Created</dt>
+              <dd>${formatValue(character.createdYear)}</dd>
             </div>
           </dl>
         </article>

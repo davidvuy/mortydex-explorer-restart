@@ -21,6 +21,7 @@ Het idee is gewoon om Rick and Morty characters op te halen en die op een leuke,
 - mock-data van 6 characters
 - tabel met naam, status, species, gender, origin, location en episodes
 - Character class om de data wat netter te maken
+- getters voor origin, location, episodes en korte info
 
 ## Installatie
 

@@ -1,19 +1,23 @@
 export class Character {
   constructor(data = {}) {
     this.id = data.id;
-    this.name = data.name;
-    this.status = data.status;
-    this.species = data.species;
-    this.type = data.type;
-    this.gender = data.gender;
-    this.origin = data.origin;
-    this.location = data.location;
-    this.episodes = data.episodes;
-    this.created = data.created;
+    this.name = data.name || 'unknown';
+    this.status = data.status || 'unknown';
+    this.species = data.species || 'unknown';
+    this.type = data.type || '';
+    this.gender = data.gender || 'unknown';
+    this.origin = data.origin || {};
+    this.location = data.location || {};
+    this.episodes = Array.isArray(data.episodes) ? data.episodes : [];
+    this.created = data.created || '';
   }
 
   static fromList(characters = []) {
     return characters.map(character => new Character(character));
+  }
+
+  static compareByName(firstCharacter, secondCharacter) {
+    return firstCharacter.name.localeCompare(secondCharacter.name);
   }
 
   get originName() {
@@ -25,14 +29,26 @@ export class Character {
   }
 
   get episodeCount() {
-    return this.episodes?.length ?? 0;
+    return this.episodes.length;
   }
 
   get statusText() {
     return this.status || 'unknown';
   }
 
+  get speciesText() {
+    return this.species || 'unknown';
+  }
+
+  get typeText() {
+    return this.type || 'unknown';
+  }
+
   get shortInfo() {
-    return `${this.statusText} - ${this.species || 'unknown'}`;
+    return `${this.statusText} - ${this.speciesText}`;
+  }
+
+  get createdYear() {
+    return this.created ? new Date(this.created).getFullYear() : 'unknown';
   }
 }
