@@ -1,7 +1,12 @@
 import './styles.css';
 import { fetchCharacters } from './api/rickMortyApi.js';
 import { Character } from './models/Character.js';
-import { bindControlEvents, bindFavoriteButtons, bindViewButtons } from './ui/events.js';
+import {
+  bindControlEvents,
+  bindFavoriteButtons,
+  bindRemoveFavoriteButtons,
+  bindViewButtons
+} from './ui/events.js';
 import { renderCharacterCards, renderCharacters } from './ui/renderCharacters.js';
 import { filterCharacters, sortCharacters } from './utils/filters.js';
 import { getFavoriteIds, toggleFavorite } from './utils/favorites.js';
@@ -120,7 +125,7 @@ app.innerHTML = `
           <div>
             <div class="section-heading">
               <p class="section-kicker">favorieten</p>
-              <h2>Eerste test</h2>
+              <h2>Mijn lijstje</h2>
             </div>
             <div class="placeholder-box" id="favoritesContainer">
               Nog geen favorieten gekozen.
@@ -178,11 +183,46 @@ const updateFavoritesBox = () => {
   const favoriteIds = getFavoriteIds();
 
   if (favoriteIds.length === 0) {
-    favoritesContainer.textContent = 'Nog geen favorieten gekozen.';
+    favoritesContainer.innerHTML = 'Nog geen favorieten gekozen.';
     return;
   }
 
-  favoritesContainer.textContent = `${favoriteIds.length} favoriet(en) opgeslagen. De lijst zelf komt later.`;
+  if (characters.length === 0) {
+    favoritesContainer.innerHTML = `${favoriteIds.length} favoriet(en) opgeslagen. Even laden...`;
+    return;
+  }
+
+  const favoriteCharacters = favoriteIds
+    .map(favoriteId => characters.find(character => character.id === favoriteId))
+    .filter(character => character);
+
+  if (favoriteCharacters.length === 0) {
+    favoritesContainer.innerHTML = "Je favorieten staan nog opgeslagen, maar ze zitten niet tussen deze API pagina's.";
+    return;
+  }
+
+  const favoriteItems = favoriteCharacters
+    .map(character => {
+      return `
+        <li class="favorite-item">
+          <div>
+            <strong>${character.name}</strong>
+            <span>${character.statusText} - ${character.speciesText}</span>
+          </div>
+          <button class="remove-favorite-button" type="button" data-id="${character.id}">
+            verwijderen
+          </button>
+        </li>
+      `;
+    })
+    .join('');
+
+  favoritesContainer.innerHTML = `
+    <p>${favoriteCharacters.length} favoriet(en)</p>
+    <ul class="favorites-list">
+      ${favoriteItems}
+    </ul>
+  `;
 };
 
 const applyFilters = () => {
@@ -213,6 +253,7 @@ const loadCharacters = async () => {
     const apiCharacters = await fetchCharacters(3);
     characters = Character.fromList(apiCharacters);
     applyFilters();
+    updateFavoritesBox();
     updateStatusMessage(`${characters.length} characters geladen uit de API.`);
   } catch (error) {
     updateStatusMessage('Er ging iets mis met de API.');
@@ -248,6 +289,14 @@ bindViewButtons(viewButtons, view => {
 });
 
 bindFavoriteButtons(resultsContainer, characterId => {
+  const favoriteIds = toggleFavorite(characterId);
+
+  updateTable();
+  updateFavoritesBox();
+  updateStatusMessage(`${favoriteIds.length} favoriet(en) opgeslagen.`);
+});
+
+bindRemoveFavoriteButtons(favoritesContainer, characterId => {
   const favoriteIds = toggleFavorite(characterId);
 
   updateTable();

@@ -21,6 +21,8 @@ Je hebt namen, status, species, gender, locaties en episodes, dus daar kan je ma
 - tabel met naam, status, species, gender, origin, location en episodes
 - eerste versie van favorieten met localStorage
 - favorieten blijven bewaard na refresh
+- favorieten worden ook in een kleine lijst getoond
+- favorieten kunnen uit die lijst verwijderd worden
 - Character class om de data wat netter te maken
 - getters voor origin, location, episodes en korte info
 

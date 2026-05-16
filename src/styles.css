@@ -230,6 +230,46 @@ select {
   padding: 1rem;
 }
 
+.favorites-list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0.8rem 0 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.favorite-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 0.65rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.favorite-item strong,
+.favorite-item span {
+  display: block;
+}
+
+.favorite-item span {
+  color: var(--soft-text);
+  font-size: 0.9rem;
+}
+
+.remove-favorite-button {
+  border: 1px solid rgba(82, 112, 140, 0.25);
+  border-radius: 999px;
+  background: white;
+  color: #16324f;
+  cursor: pointer;
+  padding: 0.45rem 0.7rem;
+}
+
 .character-card h3 {
   margin: 0;
 }

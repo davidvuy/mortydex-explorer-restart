@@ -88,3 +88,25 @@ export const bindFavoriteButtons = (container, onFavoriteClick = () => {}) => {
     onFavoriteClick(characterId);
   });
 };
+
+export const bindRemoveFavoriteButtons = (container, onRemoveClick = () => {}) => {
+  if (!container) {
+    return;
+  }
+
+  container.addEventListener('click', event => {
+    const removeButton = event.target.closest('.remove-favorite-button');
+
+    if (!removeButton) {
+      return;
+    }
+
+    const characterId = Number(removeButton.dataset.id);
+
+    if (!characterId) {
+      return;
+    }
+
+    onRemoveClick(characterId);
+  });
+};
