@@ -1,9 +1,10 @@
 import './styles.css';
 import { fetchCharacters } from './api/rickMortyApi.js';
 import { Character } from './models/Character.js';
-import { bindControlEvents, bindViewButtons } from './ui/events.js';
+import { bindControlEvents, bindFavoriteButtons, bindViewButtons } from './ui/events.js';
 import { renderCharacterCards, renderCharacters } from './ui/renderCharacters.js';
 import { filterCharacters, sortCharacters } from './utils/filters.js';
+import { getFavoriteIds, toggleFavorite } from './utils/favorites.js';
 
 const app = document.querySelector('#app');
 
@@ -119,10 +120,10 @@ app.innerHTML = `
           <div>
             <div class="section-heading">
               <p class="section-kicker">favorieten</p>
-              <h2>Nog leeg</h2>
+              <h2>Eerste test</h2>
             </div>
             <div class="placeholder-box" id="favoritesContainer">
-              Hier komen later je favorieten.
+              Nog geen favorieten gekozen.
             </div>
           </div>
 
@@ -150,6 +151,7 @@ const resetButton = document.querySelector('#resetButton');
 const resultsContainer = document.querySelector('#resultsContainer');
 const statusMessage = document.querySelector('#statusMessage');
 const viewButtons = document.querySelectorAll('[data-view]');
+const favoritesContainer = document.querySelector('#favoritesContainer');
 
 const updateStatusMessage = message => {
   if (statusMessage) {
@@ -158,12 +160,29 @@ const updateStatusMessage = message => {
 };
 
 const updateTable = () => {
+  const favoriteIds = getFavoriteIds();
+
   if (currentView === 'grid') {
-    renderCharacterCards(resultsContainer, visibleCharacters);
+    renderCharacterCards(resultsContainer, visibleCharacters, favoriteIds);
     return;
   }
 
-  renderCharacters(resultsContainer, visibleCharacters);
+  renderCharacters(resultsContainer, visibleCharacters, favoriteIds);
+};
+
+const updateFavoritesBox = () => {
+  if (!favoritesContainer) {
+    return;
+  }
+
+  const favoriteIds = getFavoriteIds();
+
+  if (favoriteIds.length === 0) {
+    favoritesContainer.textContent = 'Nog geen favorieten gekozen.';
+    return;
+  }
+
+  favoritesContainer.textContent = `${favoriteIds.length} favoriet(en) opgeslagen. De lijst zelf komt later.`;
 };
 
 const applyFilters = () => {
@@ -228,8 +247,17 @@ bindViewButtons(viewButtons, view => {
   updateStatusMessage(`Weergave veranderd naar ${view}.`);
 });
 
+bindFavoriteButtons(resultsContainer, characterId => {
+  const favoriteIds = toggleFavorite(characterId);
+
+  updateTable();
+  updateFavoritesBox();
+  updateStatusMessage(`${favoriteIds.length} favoriet(en) opgeslagen.`);
+});
+
 window.addEventListener('load', () => {
   console.log('MortyDex Explorer is geladen.');
 });
 
 loadCharacters();
+updateFavoritesBox();

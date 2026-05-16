@@ -19,6 +19,8 @@ Je hebt namen, status, species, gender, locaties en episodes, dus daar kan je ma
 - characters uit de Rick and Morty API
 - eerste 3 pagina's worden geladen, dus ongeveer 60 characters
 - tabel met naam, status, species, gender, origin, location en episodes
+- eerste versie van favorieten met localStorage
+- favorieten blijven bewaard na refresh
 - Character class om de data wat netter te maken
 - getters voor origin, location, episodes en korte info
 

@@ -66,3 +66,25 @@ export const bindViewButtons = (buttons, onViewChange = () => {}) => {
     });
   });
 };
+
+export const bindFavoriteButtons = (container, onFavoriteClick = () => {}) => {
+  if (!container) {
+    return;
+  }
+
+  container.addEventListener('click', event => {
+    const favoriteButton = event.target.closest('.favorite-button');
+
+    if (!favoriteButton) {
+      return;
+    }
+
+    const characterId = Number(favoriteButton.dataset.id);
+
+    if (!characterId) {
+      return;
+    }
+
+    onFavoriteClick(characterId);
+  });
+};

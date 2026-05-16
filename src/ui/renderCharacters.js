@@ -1,6 +1,24 @@
 import { formatValue } from '../utils/formatters.js';
+import { isFavorite } from '../utils/favorites.js';
 
-export const renderCharacters = (container, characters) => {
+const renderFavoriteButton = (character, favoriteIds) => {
+  const favorite = isFavorite(character.id, favoriteIds);
+  const favoriteIcon = favorite ? '&#9733;' : '&#9734;';
+  const favoriteText = favorite ? 'verwijder favoriet' : 'maak favoriet';
+
+  return `
+    <button
+      class="favorite-button ${favorite ? 'is-favorite' : ''}"
+      type="button"
+      data-id="${character.id}"
+      aria-label="${favoriteText} ${formatValue(character.name)}"
+    >
+      ${favoriteIcon}
+    </button>
+  `;
+};
+
+export const renderCharacters = (container, characters, favoriteIds = []) => {
   if (!container) {
     return;
   }
@@ -19,6 +37,7 @@ export const renderCharacters = (container, characters) => {
   for (const character of characters) {
     rows += `
       <tr>
+        <td>${renderFavoriteButton(character, favoriteIds)}</td>
         <td>${formatValue(character.name)}</td>
         <td>${formatValue(character.statusText)}</td>
         <td>${formatValue(character.speciesText)}</td>
@@ -35,6 +54,7 @@ export const renderCharacters = (container, characters) => {
       <table class="characters-table">
         <thead>
           <tr>
+            <th>Fav</th>
             <th>Name</th>
             <th>Status</th>
             <th>Species</th>
@@ -52,7 +72,7 @@ export const renderCharacters = (container, characters) => {
   `;
 };
 
-export const renderCharacterCards = (container, characters) => {
+export const renderCharacterCards = (container, characters, favoriteIds = []) => {
   if (!container) {
     return;
   }
@@ -70,7 +90,10 @@ export const renderCharacterCards = (container, characters) => {
     .map(character => {
       return `
         <article class="character-card">
-          <h3>${formatValue(character.name)}</h3>
+          <div class="card-top">
+            <h3>${formatValue(character.name)}</h3>
+            ${renderFavoriteButton(character, favoriteIds)}
+          </div>
           <p>${formatValue(character.shortInfo)}</p>
           <dl>
             <div>
