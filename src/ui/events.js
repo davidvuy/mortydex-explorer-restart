@@ -45,6 +45,10 @@ export const bindControlEvents = (controls = {}, onFilterChange = () => {}) => {
         genderFilter.value = 'all';
       }
 
+      if (sortSelect) {
+        sortSelect.value = 'name-asc';
+      }
+
       onFilterChange();
     });
   }

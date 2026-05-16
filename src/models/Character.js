@@ -17,11 +17,11 @@ export class Character {
   }
 
   get originName() {
-    return this.origin?.name ?? this.origin;
+    return this.origin?.name || this.origin || 'unknown';
   }
 
   get locationName() {
-    return this.location?.name ?? this.location;
+    return this.location?.name || this.location || 'unknown';
   }
 
   get episodeCount() {
@@ -29,10 +29,10 @@ export class Character {
   }
 
   get statusText() {
-    return this.status === 'Alive' ? 'Alive' : this.status ?? 'unknown';
+    return this.status || 'unknown';
   }
 
   get shortInfo() {
-    return `${this.statusText} - ${this.species}`;
+    return `${this.statusText} - ${this.species || 'unknown'}`;
   }
 }
