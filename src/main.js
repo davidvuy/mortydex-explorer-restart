@@ -1,4 +1,5 @@
 import './styles.css';
+import { fetchCharacters } from './api/rickMortyApi.js';
 import { Character } from './models/Character.js';
 import { bindControlEvents, bindViewButtons } from './ui/events.js';
 import { renderCharacterCards, renderCharacters } from './ui/renderCharacters.js';
@@ -10,107 +11,8 @@ if (!app) {
   throw new Error('App container niet gevonden.');
 }
 
-const mockCharacters = [
-  {
-    id: 1,
-    name: 'Rick Sanchez',
-    status: 'Alive',
-    species: 'Human',
-    type: '',
-    gender: 'Male',
-    origin: {
-      name: 'Earth (C-137)'
-    },
-    location: {
-      name: 'Citadel of Ricks'
-    },
-    episodes: ['S01E01', 'S01E02', 'S01E03', 'S02E10'],
-    created: '2017-11-04'
-  },
-  {
-    id: 2,
-    name: 'Morty Smith',
-    status: 'Alive',
-    species: 'Human',
-    type: '',
-    gender: 'Male',
-    origin: {
-      name: 'unknown'
-    },
-    location: {
-      name: 'Earth (Replacement Dimension)'
-    },
-    episodes: ['S01E01', 'S01E04', 'S03E01'],
-    created: '2017-11-04'
-  },
-  {
-    id: 3,
-    name: 'Summer Smith',
-    status: 'Alive',
-    species: 'Human',
-    type: '',
-    gender: 'Female',
-    origin: {
-      name: 'Earth (Replacement Dimension)'
-    },
-    location: {
-      name: 'Earth (Replacement Dimension)'
-    },
-    episodes: ['S01E06', 'S02E06', 'S03E05'],
-    created: '2017-11-04'
-  },
-  {
-    id: 47,
-    name: 'Birdperson',
-    status: 'Dead',
-    species: 'Alien',
-    type: '',
-    gender: 'Male',
-    origin: {
-      name: 'Bird World'
-    },
-    location: {
-      name: 'Planet Squanch'
-    },
-    episodes: ['S01E05', 'S02E10'],
-    created: '2017-11-05'
-  },
-  {
-    id: 242,
-    name: 'Mr. Meeseeks',
-    status: 'unknown',
-    species: 'Meeseeks',
-    type: '',
-    gender: 'Male',
-    origin: {
-      name: '   '
-    },
-    location: {
-      name: 'Interdimensional Cable'
-    },
-    episodes: ['S01E05'],
-    created: '2017-11-05'
-  },
-  {
-    id: 7,
-    name: 'Abradolf Lincler',
-    status: 'unknown',
-    species: 'Human',
-    type: 'Genetic experiment',
-    gender: 'Male',
-    origin: {
-      name: 'Earth (Replacement Dimension)'
-    },
-    location: {
-      name: ''
-    },
-    episodes: ['S01E10', 'S02E07'],
-    created: '2017-11-04'
-  }
-];
-
-const characters = Character.fromList(mockCharacters);
-let visibleCharacters = [...characters];
+let characters = [];
+let visibleCharacters = [];
 let currentView = 'table';
 
 app.innerHTML = `
@@ -119,15 +21,15 @@ app.innerHTML = `
       <p class="eyebrow">web advanced - mortydex explorer</p>
       <h1>Rick and Morty characters op een simpele manier tonen</h1>
       <p class="hero-copy">
-        We zijn terug opnieuw begonnen, dus hier zetten we eerst de basis klaar.
-        Eerst de layout, dan wat events, en daarna tijdelijke data in een tabel.
+        Characters worden uit de Rick and Morty API geladen.
+        Daarna kan je ze zoeken, filteren en sorteren.
       </p>
     </header>
 
     <main class="layout">
       <section class="panel controls-panel" aria-labelledby="controls-title">
         <div class="section-heading">
-          <p class="section-kicker">dag 1 + dag 2</p>
+          <p class="section-kicker">module 4</p>
           <h2 id="controls-title">Zoeken, filteren en sorteren</h2>
         </div>
 
@@ -158,7 +60,7 @@ app.innerHTML = `
               <option value="all">Alle species</option>
               <option value="Human">Human</option>
               <option value="Alien">Alien</option>
-              <option value="Meeseeks">Meeseeks</option>
+              <option value="Humanoid">Humanoid</option>
             </select>
           </label>
 
@@ -199,7 +101,7 @@ app.innerHTML = `
         </div>
 
         <p class="status-note" id="statusMessage">
-          6 tijdelijke characters geladen. Da's genoeg om de tabel al te testen.
+          Characters worden geladen uit de API.
         </p>
       </section>
 
@@ -207,7 +109,7 @@ app.innerHTML = `
         <section class="panel" aria-labelledby="results-title">
           <div class="section-heading">
             <p class="section-kicker">resultaten</p>
-            <h2 id="results-title">Mock-data in tabelvorm</h2>
+            <h2 id="results-title">Characters uit de API</h2>
           </div>
 
           <div id="resultsContainer"></div>
@@ -279,6 +181,33 @@ const applyFilters = () => {
   updateStatusMessage(`${visibleCharacters.length} result(a)t(en) zichtbaar.`);
 };
 
+const loadCharacters = async () => {
+  if (resultsContainer) {
+    resultsContainer.innerHTML = `
+      <div class="empty-state">
+        Characters laden...
+      </div>
+    `;
+  }
+
+  try {
+    const apiCharacters = await fetchCharacters(3);
+    characters = Character.fromList(apiCharacters);
+    applyFilters();
+    updateStatusMessage(`${characters.length} characters geladen uit de API.`);
+  } catch (error) {
+    updateStatusMessage('Er ging iets mis met de API.');
+
+    if (resultsContainer) {
+      resultsContainer.innerHTML = `
+        <div class="empty-state">
+          De characters konden niet geladen worden. Probeer later opnieuw.
+        </div>
+      `;
+    }
+  }
+};
+
 updateTable();
 
 bindControlEvents(
@@ -302,3 +231,5 @@ bindViewButtons(viewButtons, view => {
 window.addEventListener('load', () => {
   console.log('MortyDex Explorer is geladen.');
 });
+
+loadCharacters();

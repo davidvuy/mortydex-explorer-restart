@@ -8,7 +8,8 @@ export class Character {
     this.gender = data.gender || 'unknown';
     this.origin = data.origin || {};
     this.location = data.location || {};
-    this.episodes = Array.isArray(data.episodes) ? data.episodes : [];
+    this.episodes = Array.isArray(data.episode) ? data.episode : data.episodes || [];
+    this.image = data.image || '';
     this.created = data.created || '';
   }
 
