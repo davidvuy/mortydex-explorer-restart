@@ -36,7 +36,7 @@ export const renderCharacters = (container, characters, favoriteIds = []) => {
 
   for (const character of characters) {
     rows += `
-      <tr>
+      <tr class="character-row" data-id="${character.id}">
         <td>${renderFavoriteButton(character, favoriteIds)}</td>
         <td>${formatValue(character.name)}</td>
         <td>${formatValue(character.statusText)}</td>
@@ -89,7 +89,7 @@ export const renderCharacterCards = (container, characters, favoriteIds = []) =>
   const cards = characters
     .map(character => {
       return `
-        <article class="character-card">
+        <article class="character-card" data-id="${character.id}">
           <img
             class="character-image"
             src="${character.image}"

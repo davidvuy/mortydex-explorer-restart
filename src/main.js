@@ -2,12 +2,14 @@ import './styles.css';
 import { fetchCharacters } from './api/rickMortyApi.js';
 import { Character } from './models/Character.js';
 import {
+  bindCharacterClicks,
   bindControlEvents,
   bindFavoriteButtons,
   bindRemoveFavoriteButtons,
   bindViewButtons
 } from './ui/events.js';
 import { renderCharacterCards, renderCharacters } from './ui/renderCharacters.js';
+import { renderCharacterModal, renderEmptyModal } from './ui/renderModal.js';
 import { filterCharacters, sortCharacters } from './utils/filters.js';
 import { getFavoriteIds, toggleFavorite } from './utils/favorites.js';
 import { getPreferences, savePreferences } from './utils/preferences.js';
@@ -142,15 +144,17 @@ app.innerHTML = `
           <div>
             <div class="section-heading">
               <p class="section-kicker">modal</p>
-              <h2>Nog leeg</h2>
+              <h2>Details</h2>
             </div>
-            <div class="placeholder-box" id="modalRoot">
-              Later gaan we hier details tonen van een character.
+            <div class="placeholder-box">
+              Klik op een character om de details te zien.
             </div>
           </div>
         </section>
       </section>
     </main>
+
+    <div id="modalRoot"></div>
   </div>
 `;
 
@@ -165,6 +169,7 @@ const resultsContainer = document.querySelector('#resultsContainer');
 const statusMessage = document.querySelector('#statusMessage');
 const viewButtons = document.querySelectorAll('[data-view]');
 const favoritesContainer = document.querySelector('#favoritesContainer');
+const modalRoot = document.querySelector('#modalRoot');
 
 const updateStatusMessage = message => {
   if (statusMessage) {
@@ -285,6 +290,17 @@ const updateFavoritesBox = () => {
   `;
 };
 
+const openCharacterDetails = characterId => {
+  const selectedCharacter = characters.find(character => character.id === characterId);
+
+  if (!selectedCharacter) {
+    return;
+  }
+
+  renderCharacterModal(modalRoot, selectedCharacter);
+  updateStatusMessage(`${selectedCharacter.name} details geopend.`);
+};
+
 const applyFilters = () => {
   const activeFilters = {
     search: searchInput ? searchInput.value : '',
@@ -378,6 +394,23 @@ bindRemoveFavoriteButtons(favoritesContainer, characterId => {
   updateFavoritesBox();
   updateStatusMessage(`${favoriteIds.length} favoriet(en) opgeslagen.`);
 });
+
+bindCharacterClicks(resultsContainer, characterId => {
+  openCharacterDetails(characterId);
+});
+
+if (modalRoot) {
+  modalRoot.addEventListener('click', event => {
+    const closeButton = event.target.closest('.modal-close-button');
+
+    if (!closeButton) {
+      return;
+    }
+
+    renderEmptyModal(modalRoot);
+    updateStatusMessage('Detail gesloten.');
+  });
+}
 
 window.addEventListener('load', () => {
   console.log('MortyDex Explorer is geladen.');

@@ -110,3 +110,29 @@ export const bindRemoveFavoriteButtons = (container, onRemoveClick = () => {}) =
     onRemoveClick(characterId);
   });
 };
+
+export const bindCharacterClicks = (container, onCharacterClick = () => {}) => {
+  if (!container) {
+    return;
+  }
+
+  container.addEventListener('click', event => {
+    if (event.target.closest('button')) {
+      return;
+    }
+
+    const characterElement = event.target.closest('.character-card, .character-row');
+
+    if (!characterElement) {
+      return;
+    }
+
+    const characterId = Number(characterElement.dataset.id);
+
+    if (!characterId) {
+      return;
+    }
+
+    onCharacterClick(characterId);
+  });
+};

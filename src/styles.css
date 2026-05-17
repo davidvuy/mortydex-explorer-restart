@@ -238,6 +238,11 @@ body.dark-theme .favorite-item {
   background: rgba(223, 238, 255, 0.45);
 }
 
+.character-row,
+.character-card {
+  cursor: pointer;
+}
+
 .favorite-button {
   width: 2.35rem;
   height: 2.35rem;
@@ -377,6 +382,84 @@ body.dark-theme .favorite-item {
   place-items: center;
   text-align: center;
   padding: 1rem;
+}
+
+#modalRoot.modal-open {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  margin: 0;
+  min-height: auto;
+  border: 0;
+  border-radius: 0;
+  background: rgba(10, 24, 32, 0.58);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  display: grid;
+  gap: 0.75rem;
+  text-align: left;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  box-shadow: var(--panel-shadow);
+  padding: 1rem;
+}
+
+.modal-close-button {
+  justify-self: end;
+  border: 1px solid rgba(82, 112, 140, 0.25);
+  border-radius: 999px;
+  background: white;
+  color: #16324f;
+  cursor: pointer;
+  padding: 0.45rem 0.8rem;
+}
+
+.modal-image {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+.modal-card h3,
+.modal-card p,
+.modal-details {
+  margin: 0;
+}
+
+.modal-details {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.modal-details div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.modal-details dt {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.modal-details dd {
+  margin: 0;
+}
+
+body.dark-theme .modal-close-button {
+  background: rgba(8, 19, 27, 0.92);
+  color: #eef8f5;
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 @media (max-width: 960px) {
