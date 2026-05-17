@@ -90,6 +90,11 @@ export const renderCharacterCards = (container, characters, favoriteIds = []) =>
     .map(character => {
       return `
         <article class="character-card">
+          <img
+            class="character-image"
+            src="${character.image}"
+            alt="${formatValue(character.name)}"
+          />
           <div class="card-top">
             <h3>${formatValue(character.name)}</h3>
             ${renderFavoriteButton(character, favoriteIds)}

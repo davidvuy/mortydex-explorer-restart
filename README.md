@@ -25,6 +25,7 @@ Je hebt namen, status, species, gender, locaties en episodes, dus daar kan je ma
 - favorieten kunnen uit die lijst verwijderd worden
 - gekozen thema wordt bewaard
 - laatste zoekterm, filters, sortering en view worden bewaard
+- cardweergave toont nu character foto's
 - Character class om de data wat netter te maken
 - getters voor origin, location, episodes en korte info
 
