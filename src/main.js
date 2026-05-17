@@ -10,6 +10,7 @@ import {
 import { renderCharacterCards, renderCharacters } from './ui/renderCharacters.js';
 import { filterCharacters, sortCharacters } from './utils/filters.js';
 import { getFavoriteIds, toggleFavorite } from './utils/favorites.js';
+import { getPreferences, savePreferences } from './utils/preferences.js';
 
 const app = document.querySelector('#app');
 
@@ -19,7 +20,9 @@ if (!app) {
 
 let characters = [];
 let visibleCharacters = [];
-let currentView = 'table';
+const savedPreferences = getPreferences();
+let currentView = savedPreferences.view;
+let currentTheme = savedPreferences.theme;
 
 app.innerHTML = `
   <div class="page-shell">
@@ -35,7 +38,7 @@ app.innerHTML = `
     <main class="layout">
       <section class="panel controls-panel" aria-labelledby="controls-title">
         <div class="section-heading">
-          <p class="section-kicker">module 4</p>
+          <p class="section-kicker">module 4 + 6</p>
           <h2 id="controls-title">Zoeken, filteren en sorteren</h2>
         </div>
 
@@ -97,6 +100,10 @@ app.innerHTML = `
           filters wissen
         </button>
 
+        <button class="theme-button" id="themeButton" type="button">
+          donkere modus
+        </button>
+
         <div class="view-toggle" aria-label="Kies een weergave">
           <button class="toggle-button is-active" type="button" data-view="table">
             tabel
@@ -153,6 +160,7 @@ const speciesFilter = document.querySelector('#speciesFilter');
 const genderFilter = document.querySelector('#genderFilter');
 const sortSelect = document.querySelector('#sortSelect');
 const resetButton = document.querySelector('#resetButton');
+const themeButton = document.querySelector('#themeButton');
 const resultsContainer = document.querySelector('#resultsContainer');
 const statusMessage = document.querySelector('#statusMessage');
 const viewButtons = document.querySelectorAll('[data-view]');
@@ -162,6 +170,58 @@ const updateStatusMessage = message => {
   if (statusMessage) {
     statusMessage.textContent = message;
   }
+};
+
+const updateViewButtons = () => {
+  viewButtons.forEach(button => {
+    if (button.dataset.view === currentView) {
+      button.classList.add('is-active');
+    } else {
+      button.classList.remove('is-active');
+    }
+  });
+};
+
+const updateTheme = () => {
+  document.body.classList.toggle('dark-theme', currentTheme === 'dark');
+
+  if (themeButton) {
+    themeButton.textContent = currentTheme === 'dark' ? 'lichte modus' : 'donkere modus';
+  }
+};
+
+const setSavedControls = () => {
+  if (searchInput) {
+    searchInput.value = savedPreferences.search;
+  }
+
+  if (statusFilter) {
+    statusFilter.value = savedPreferences.status;
+  }
+
+  if (speciesFilter) {
+    speciesFilter.value = savedPreferences.species;
+  }
+
+  if (genderFilter) {
+    genderFilter.value = savedPreferences.gender;
+  }
+
+  if (sortSelect) {
+    sortSelect.value = savedPreferences.sort;
+  }
+};
+
+const saveCurrentPreferences = () => {
+  savePreferences({
+    theme: currentTheme,
+    view: currentView,
+    search: searchInput ? searchInput.value : '',
+    status: statusFilter ? statusFilter.value : 'all',
+    species: speciesFilter ? speciesFilter.value : 'all',
+    gender: genderFilter ? genderFilter.value : 'all',
+    sort: sortSelect ? sortSelect.value : 'name-asc'
+  });
 };
 
 const updateTable = () => {
@@ -236,6 +296,7 @@ const applyFilters = () => {
 
   visibleCharacters = filterCharacters(characters, activeFilters);
   visibleCharacters = sortCharacters(visibleCharacters, selectedSort);
+  saveCurrentPreferences();
   updateTable();
   updateStatusMessage(`${visibleCharacters.length} result(a)t(en) zichtbaar.`);
 };
@@ -268,6 +329,9 @@ const loadCharacters = async () => {
   }
 };
 
+setSavedControls();
+updateViewButtons();
+updateTheme();
 updateTable();
 
 bindControlEvents(
@@ -284,9 +348,20 @@ bindControlEvents(
 
 bindViewButtons(viewButtons, view => {
   currentView = view;
+  saveCurrentPreferences();
   updateTable();
+  updateViewButtons();
   updateStatusMessage(`Weergave veranderd naar ${view}.`);
 });
+
+if (themeButton) {
+  themeButton.addEventListener('click', () => {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    saveCurrentPreferences();
+    updateTheme();
+    updateStatusMessage('Voorkeur voor thema opgeslagen.');
+  });
+}
 
 bindFavoriteButtons(resultsContainer, characterId => {
   const favoriteIds = toggleFavorite(characterId);

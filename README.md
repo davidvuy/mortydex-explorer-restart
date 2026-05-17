@@ -23,6 +23,8 @@ Je hebt namen, status, species, gender, locaties en episodes, dus daar kan je ma
 - favorieten blijven bewaard na refresh
 - favorieten worden ook in een kleine lijst getoond
 - favorieten kunnen uit die lijst verwijderd worden
+- gekozen thema wordt bewaard
+- laatste zoekterm, filters, sortering en view worden bewaard
 - Character class om de data wat netter te maken
 - getters voor origin, location, episodes en korte info
 

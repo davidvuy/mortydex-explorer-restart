@@ -28,6 +28,19 @@ body {
   min-height: 100vh;
 }
 
+body.dark-theme {
+  color: #eef8f5;
+  background:
+    radial-gradient(circle at top left, rgba(17, 135, 105, 0.45), transparent 32%),
+    linear-gradient(135deg, #132530 0%, #0d1a24 100%);
+  --panel-bg: rgba(15, 31, 42, 0.9);
+  --panel-border: rgba(255, 255, 255, 0.09);
+  --panel-shadow: 0 22px 60px rgba(0, 0, 0, 0.22);
+  --accent: #65d8bb;
+  --accent-soft: rgba(101, 216, 187, 0.14);
+  --soft-text: #b7c8d5;
+}
+
 button,
 input,
 select {
@@ -151,6 +164,17 @@ select {
   padding: 0.75rem 0.95rem;
 }
 
+.theme-button {
+  width: 100%;
+  margin-top: 0.8rem;
+  border: 1px solid rgba(17, 135, 105, 0.24);
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  padding: 0.75rem 0.95rem;
+}
+
 .reset-button:hover {
   border-color: rgba(17, 135, 105, 0.35);
 }
@@ -184,6 +208,22 @@ select {
   padding: 0.9rem 0.8rem;
   text-align: left;
   border-bottom: 1px solid rgba(22, 50, 79, 0.08);
+}
+
+body.dark-theme .field input,
+body.dark-theme .field select,
+body.dark-theme .reset-button,
+body.dark-theme .favorite-button,
+body.dark-theme .remove-favorite-button {
+  background: rgba(8, 19, 27, 0.92);
+  color: #eef8f5;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.dark-theme .characters-table td,
+body.dark-theme .character-card dd,
+body.dark-theme .favorite-item {
+  color: #eef8f5;
 }
 
 .characters-table th {
