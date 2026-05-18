@@ -30,16 +30,10 @@ app.innerHTML = `
   <div class="page-shell">
     <header class="hero">
       <p class="eyebrow">mortydex explorer</p>
-      <h1>Vind je favoriete weirdos uit de multiverse</h1>
+      <h1>MortyDex Explorer</h1>
       <p class="hero-copy">
-        Zoek door Rick and Morty characters, filter ze en bewaar je favorieten.
-        Klik op een card om meer details te zien.
+        Zoek Rick and Morty characters, filter ze en bewaar je favorieten.
       </p>
-      <div class="hero-tags">
-        <span>60 characters</span>
-        <span>API data</span>
-        <span>favorieten</span>
-      </div>
     </header>
 
     <main class="layout">
@@ -155,7 +149,7 @@ app.innerHTML = `
 
           <div>
             <div class="section-heading">
-              <p class="section-kicker">modal</p>
+              <p class="section-kicker">info</p>
               <h2>Details</h2>
             </div>
             <div class="placeholder-box">
