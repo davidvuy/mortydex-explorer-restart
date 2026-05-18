@@ -1,5 +1,9 @@
 import { formatValue } from '../utils/formatters.js';
 
+const getStatusClass = status => {
+  return String(status).toLowerCase();
+};
+
 export const renderCharacterModal = (container, character) => {
   if (!container || !character) {
     return;
@@ -13,7 +17,12 @@ export const renderCharacterModal = (container, character) => {
       </button>
       <img class="modal-image" src="${character.image}" alt="${formatValue(character.name)}" />
       <h3>${formatValue(character.name)}</h3>
-      <p>${formatValue(character.shortInfo)}</p>
+      <div class="card-badges">
+        <span class="status-badge ${getStatusClass(character.statusText)}">
+          ${formatValue(character.statusText)}
+        </span>
+        <span class="species-badge">${formatValue(character.speciesText)}</span>
+      </div>
 
       <dl class="modal-details">
         <div>

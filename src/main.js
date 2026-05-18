@@ -29,19 +29,24 @@ let currentTheme = savedPreferences.theme;
 app.innerHTML = `
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">web advanced - mortydex explorer</p>
-      <h1>Rick and Morty characters op een simpele manier tonen</h1>
+      <p class="eyebrow">mortydex explorer</p>
+      <h1>Vind je favoriete weirdos uit de multiverse</h1>
       <p class="hero-copy">
-        Characters worden uit de Rick and Morty API geladen.
-        Daarna kan je ze zoeken, filteren en sorteren.
+        Zoek door Rick and Morty characters, filter ze en bewaar je favorieten.
+        Klik op een card om meer details te zien.
       </p>
+      <div class="hero-tags">
+        <span>60 characters</span>
+        <span>API data</span>
+        <span>favorieten</span>
+      </div>
     </header>
 
     <main class="layout">
       <section class="panel controls-panel" aria-labelledby="controls-title">
         <div class="section-heading">
-          <p class="section-kicker">module 4 + 6</p>
-          <h2 id="controls-title">Zoeken, filteren en sorteren</h2>
+          <p class="section-kicker">filters</p>
+          <h2 id="controls-title">Zoeken en sorteren</h2>
         </div>
 
         <form class="controls-grid" id="controlsForm">
@@ -98,21 +103,23 @@ app.innerHTML = `
           </label>
         </form>
 
-        <button class="reset-button" id="resetButton" type="button">
-          filters wissen
-        </button>
-
-        <button class="theme-button" id="themeButton" type="button">
-          donkere modus
-        </button>
-
-        <div class="view-toggle" aria-label="Kies een weergave">
-          <button class="toggle-button is-active" type="button" data-view="table">
-            tabel
+        <div class="control-actions">
+          <button class="reset-button" id="resetButton" type="button">
+            filters wissen
           </button>
-          <button class="toggle-button" type="button" data-view="grid">
-            cards
+
+          <button class="theme-button" id="themeButton" type="button">
+            donkere modus
           </button>
+
+          <div class="view-toggle" aria-label="Kies een weergave">
+            <button class="toggle-button is-active" type="button" data-view="table">
+              tabel
+            </button>
+            <button class="toggle-button" type="button" data-view="grid">
+              cards
+            </button>
+          </div>
         </div>
 
         <p class="status-note" id="statusMessage">
@@ -121,10 +128,15 @@ app.innerHTML = `
       </section>
 
       <section class="content-stack">
-        <section class="panel" aria-labelledby="results-title">
+        <section class="panel results-panel" aria-labelledby="results-title">
           <div class="section-heading">
             <p class="section-kicker">resultaten</p>
-            <h2 id="results-title">Characters uit de API</h2>
+            <h2 id="results-title">Characters</h2>
+          </div>
+          <div class="results-summary" id="resultsSummary">
+            <span>0 zichtbaar</span>
+            <span>0 alive</span>
+            <span>0 favorieten</span>
           </div>
 
           <div id="resultsContainer"></div>
@@ -170,6 +182,7 @@ const statusMessage = document.querySelector('#statusMessage');
 const viewButtons = document.querySelectorAll('[data-view]');
 const favoritesContainer = document.querySelector('#favoritesContainer');
 const modalRoot = document.querySelector('#modalRoot');
+const resultsSummary = document.querySelector('#resultsSummary');
 
 const updateStatusMessage = message => {
   if (statusMessage) {
@@ -238,6 +251,21 @@ const updateTable = () => {
   }
 
   renderCharacters(resultsContainer, visibleCharacters, favoriteIds);
+};
+
+const updateResultsSummary = () => {
+  if (!resultsSummary) {
+    return;
+  }
+
+  const favoriteIds = getFavoriteIds();
+  const aliveCount = visibleCharacters.filter(character => character.statusText === 'Alive').length;
+
+  resultsSummary.innerHTML = `
+    <span>${visibleCharacters.length} zichtbaar</span>
+    <span>${aliveCount} alive</span>
+    <span>${favoriteIds.length} favoriet(en)</span>
+  `;
 };
 
 const updateFavoritesBox = () => {
@@ -314,6 +342,7 @@ const applyFilters = () => {
   visibleCharacters = sortCharacters(visibleCharacters, selectedSort);
   saveCurrentPreferences();
   updateTable();
+  updateResultsSummary();
   updateStatusMessage(`${visibleCharacters.length} result(a)t(en) zichtbaar.`);
 };
 
@@ -384,6 +413,7 @@ bindFavoriteButtons(resultsContainer, characterId => {
 
   updateTable();
   updateFavoritesBox();
+  updateResultsSummary();
   updateStatusMessage(`${favoriteIds.length} favoriet(en) opgeslagen.`);
 });
 
@@ -392,6 +422,7 @@ bindRemoveFavoriteButtons(favoritesContainer, characterId => {
 
   updateTable();
   updateFavoritesBox();
+  updateResultsSummary();
   updateStatusMessage(`${favoriteIds.length} favoriet(en) opgeslagen.`);
 });
 

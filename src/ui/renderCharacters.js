@@ -1,6 +1,10 @@
 import { formatValue } from '../utils/formatters.js';
 import { isFavorite } from '../utils/favorites.js';
 
+const getStatusClass = status => {
+  return String(status).toLowerCase();
+};
+
 const renderFavoriteButton = (character, favoriteIds) => {
   const favorite = isFavorite(character.id, favoriteIds);
   const favoriteIcon = favorite ? '&#9733;' : '&#9734;';
@@ -38,8 +42,17 @@ export const renderCharacters = (container, characters, favoriteIds = []) => {
     rows += `
       <tr class="character-row" data-id="${character.id}">
         <td>${renderFavoriteButton(character, favoriteIds)}</td>
-        <td>${formatValue(character.name)}</td>
-        <td>${formatValue(character.statusText)}</td>
+        <td>
+          <div class="table-name-cell">
+            <img class="table-avatar" src="${character.image}" alt="${formatValue(character.name)}" />
+            <span>${formatValue(character.name)}</span>
+          </div>
+        </td>
+        <td>
+          <span class="status-badge ${getStatusClass(character.statusText)}">
+            ${formatValue(character.statusText)}
+          </span>
+        </td>
         <td>${formatValue(character.speciesText)}</td>
         <td>${formatValue(character.gender)}</td>
         <td>${formatValue(character.originName)}</td>
@@ -87,19 +100,29 @@ export const renderCharacterCards = (container, characters, favoriteIds = []) =>
   }
 
   const cards = characters
-    .map(character => {
+    .map((character, index) => {
+      const cardStyle =
+        index % 9 === 0 ? 'is-wide' : index % 9 === 4 ? 'is-tall' : '';
+
       return `
-        <article class="character-card" data-id="${character.id}">
-          <img
-            class="character-image"
-            src="${character.image}"
-            alt="${formatValue(character.name)}"
-          />
-          <div class="card-top">
-            <h3>${formatValue(character.name)}</h3>
+        <article class="character-card ${cardStyle}" data-id="${character.id}">
+          <div class="image-wrap">
+            <img
+              class="character-image"
+              src="${character.image}"
+              alt="${formatValue(character.name)}"
+            />
             ${renderFavoriteButton(character, favoriteIds)}
           </div>
-          <p>${formatValue(character.shortInfo)}</p>
+          <div class="card-top">
+            <h3>${formatValue(character.name)}</h3>
+          </div>
+          <div class="card-badges">
+            <span class="status-badge ${getStatusClass(character.statusText)}">
+              ${formatValue(character.statusText)}
+            </span>
+            <span class="species-badge">${formatValue(character.speciesText)}</span>
+          </div>
           <dl>
             <div>
               <dt>Gender</dt>

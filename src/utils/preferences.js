@@ -2,7 +2,7 @@ const PREFERENCES_KEY = 'mortydexPreferences';
 
 const defaultPreferences = {
   theme: 'light',
-  view: 'table',
+  view: 'grid',
   search: '',
   status: 'all',
   species: 'all',
